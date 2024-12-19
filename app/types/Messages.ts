@@ -1,3 +1,5 @@
+import type { TrackObject } from '~/utils/callsTypes'
+
 export type User = {
 	id: string
 	name: string
@@ -8,6 +10,7 @@ export type User = {
 	tracks: {
 		audio?: string
 		audioEnabled?: boolean
+		audioUnavailable: boolean
 		video?: string
 		videoEnabled?: boolean
 		screenshare?: string
@@ -18,6 +21,12 @@ export type User = {
 export type RoomState = {
 	meetingId?: string
 	users: User[]
+	ai: {
+		enabled: boolean
+		controllingUser?: string
+		error?: string
+		connectionPending?: boolean
+	}
 }
 
 export type ServerMessage =
@@ -39,6 +48,10 @@ export type ServerMessage =
 	  }
 	| {
 			type: 'partyserver-pong'
+	  }
+	| {
+			type: 'aiSdp'
+			sdp: string
 	  }
 
 export type ClientMessage =
@@ -63,4 +76,19 @@ export type ClientMessage =
 	  }
 	| {
 			type: 'heartbeat'
+	  }
+	| {
+			type: 'enableAi'
+			instructions?: string
+			voice?: string
+	  }
+	| {
+			type: 'disableAi'
+	  }
+	| {
+			type: 'requestAiControl'
+			track: TrackObject
+	  }
+	| {
+			type: 'relenquishAiControl'
 	  }
